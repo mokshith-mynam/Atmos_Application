@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Atmos Citizen",
+    "slug": "atmos-citizen",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-location", "expo-image-picker"],
+    "ios": { "supportsTablet": true, "infoPlist": { "NSLocationWhenInUseUsageDescription": "Atmos uses your location to route pollution reports to the relevant authority." } },
+    "android": { "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "CAMERA"] }
+  }
+}

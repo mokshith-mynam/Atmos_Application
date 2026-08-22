@@ -1,0 +1,4 @@
+rasterio==1.4.3
+numpy==2.2.1
+shapely==2.0.6
+requests==2.32.3
