@@ -68,7 +68,7 @@ Evidence: {evidence}
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             response = await client.post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
                 headers={"x-goog-api-key": api_key},
                 json={
                     "contents": [{"parts": [{"text": prompt}]}],
@@ -82,7 +82,7 @@ Evidence: {evidence}
             raise ValueError("Gemini returned no text")
         return {
             "provider": "Google Gemini API",
-            "model": "gemini-2.5-flash",
+            "model": "gemini-3.6-flash",
             "mode": "live",
             "language": language,
             "briefing": briefing,
