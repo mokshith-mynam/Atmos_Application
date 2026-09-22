@@ -56,6 +56,30 @@ pip install -r services/api/requirements.txt -r services/ingestion/requirements.
 
 The API intentionally uses a realistic in-memory seed when PostGIS is not available so the dashboard can be developed offline. Set `DATABASE_URL` to switch to PostgreSQL and `KAFKA_BOOTSTRAP_SERVERS` to enable event publishing.
 
+## Google Gemini authority briefings
+
+Atmos can generate a concise, multilingual authority briefing from the selected incident's normalized evidence. The Gemini API key is optional: without it, the same endpoint returns a visibly labelled deterministic demo briefing so the prototype remains functional offline.
+
+1. Create a free API key in [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Set `GEMINI_API_KEY` only on the FastAPI service (never in `VITE_*` variables or the frontend).
+3. Deploy the FastAPI service and set the dashboard's `VITE_API_URL` and `VITE_WS_URL` to its public URL.
+
+The dashboard's **Generate Gemini briefing** control supports English, Hindi, Portuguese, Russian, and Chinese, and always notes that human authorization is required before enforcement.
+
+## Free Render API deployment
+
+Deploy `services/api` as a second Render **Web Service** using the free plan:
+
+```bash
+# Build command
+pip install -r services/api/requirements.txt
+
+# Start command
+uvicorn app.main:app --app-dir services/api --host 0.0.0.0 --port $PORT
+```
+
+Set `ATMOS_ALLOWED_ORIGINS` to the dashboard URL and set `ATMOS_ALLOWED_HOSTS` to the API service hostname. Then set the dashboard static site's build-time variables `VITE_API_URL=https://YOUR-API.onrender.com` and `VITE_WS_URL=wss://YOUR-API.onrender.com`, and redeploy the static site.
+
 ## Run the authority dashboard
 
 ```bash

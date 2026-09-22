@@ -14,6 +14,7 @@ from .database import connect, historical_pm25, monthly_pm25, persist_sensor
 from .dual_mode import demo_history, predict_action
 from .live import hub
 from .decision_engine import action_plan, checkpoint_manifest, evidence_package, forecast_export, recommendation
+from .gemini import SUPPORTED_LANGUAGES, generate_authority_briefing
 from .schemas import ActionTriggerRequest, AlertAction, CitizenReport, DualModePrediction, HistoricalObservation, IncidentAlert, IngestEnvelope, SensorReading
 from .store import ALERTS, CORRIDORS, HOTSPOTS, overview
 
@@ -101,6 +102,20 @@ def get_evidence_package(alert_id: str):
     if not hotspot:
         raise HTTPException(status_code=404, detail="Hotspot not found")
     return evidence_package(alert, hotspot)
+
+
+@app.get("/api/events/{alert_id}/ai-briefing")
+async def get_ai_briefing(alert_id: str, language: str = Query(default="English")):
+    """Produce a Gemini-powered, multilingual authority briefing when configured."""
+    if language not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=422, detail=f"Unsupported language. Choose one of: {', '.join(SUPPORTED_LANGUAGES)}")
+    alert = next((item for item in ALERTS if item.alert_id == alert_id), None)
+    if not alert:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    hotspot = next((item for item in HOTSPOTS if item.hotspot_id == alert.hotspot_id), None)
+    if not hotspot:
+        raise HTTPException(status_code=404, detail="Hotspot not found")
+    return await generate_authority_briefing(alert, hotspot, language)
 
 
 @app.get("/api/hotspots/{hotspot_id}/exposure")

@@ -12,7 +12,10 @@ from __future__ import annotations
 
 import sys
 import unittest
+import asyncio
+import os
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +27,7 @@ from app.main import (  # noqa: E402
     federation_status,
     get_forecasts,
     get_hotspots,
+    get_ai_briefing,
     get_live_snapshot,
     get_overview,
     health,
@@ -59,6 +63,14 @@ class ApiSmokeTests(unittest.TestCase):
         self.assertEqual(status["round"], 42)
         self.assertGreater(len(status["nodes"]), 0)
         self.assertEqual(checkpoint["model_version"], "aq-transformer-v0.4.2")
+
+    def test_gemini_briefing_has_a_safe_offline_fallback(self) -> None:
+        with patch.dict(os.environ, {"GEMINI_API_KEY": ""}):
+            briefing = asyncio.run(get_ai_briefing("ALT-2026-0819-001", language="English"))
+
+        self.assertEqual(briefing["mode"], "demo-fallback")
+        self.assertEqual(briefing["provider"], "local-demo")
+        self.assertIn("human review", briefing["briefing"])
 
 
 if __name__ == "__main__":
