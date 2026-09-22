@@ -74,3 +74,21 @@ cd apps/web && npm run dev
 ```
 
 For CPU-only federation development, install `services/federated/requirements-cpu.txt`; the default federation requirements are suitable for a hardware-specific PyTorch installation.
+
+## Run tests
+
+The API smoke tests validate the main dashboard data contracts without requiring PostgreSQL or Kafka:
+
+```bash
+.venv/bin/python tests/test_api_smoke.py
+```
+
+The authority dashboard has Vitest + React Testing Library tests for its initial live overview, API data request, and federation coordination view:
+
+```bash
+cd apps/web
+npm install
+npm run test
+```
+
+Use `npm run test:watch` while developing the dashboard.
