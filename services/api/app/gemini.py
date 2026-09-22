@@ -72,7 +72,7 @@ Evidence: {evidence}
                 headers={"x-goog-api-key": api_key},
                 json={
                     "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.2, "maxOutputTokens": 260},
+                    "generationConfig": {"temperature": 0.2, "maxOutputTokens": 800},
                 },
             )
             response.raise_for_status()
